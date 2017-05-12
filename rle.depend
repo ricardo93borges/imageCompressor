@@ -1,0 +1,76 @@
+# depslib dependency file v1.0
+1491602933 source:/home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/main.c
+	<math.h>
+	<string.h>
+	"opengl.h"
+
+1491602914 /home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/opengl.h
+	<windows.h>
+	"gl/glut.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+
+1300995668 /home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/include/GL/glut.h
+	"freeglut.h"
+
+1300995668 /home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/include/GL/freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1300995668 /home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/include/GL/freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1300995668 /home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/include/GL/freeglut_ext.h
+
+1491603111 source:/home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/opengl.c
+	"opengl.h"
+
+1494623406 source:/home/15109336/DriveH/c/imageCompressor/main.c
+	<math.h>
+	<string.h>
+	"opengl.h"
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/opengl.h
+	<windows.h>
+	"gl/glut.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/gl/glut.h
+	"freeglut.h"
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/gl/freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/gl/freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/gl/freeglut_ext.h
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/GL/glut.h
+	"freeglut.h"
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/GL/freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/GL/freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1491910956 /home/15109336/DriveH/c/imageCompressor/include/GL/freeglut_ext.h
+
+1491914237 source:/home/15109336/DriveH/c/imageCompressor/opengl.c
+	"opengl.h"
+	<string.h>
+
