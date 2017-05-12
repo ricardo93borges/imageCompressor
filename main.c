@@ -34,7 +34,7 @@ void process()
     int pos = 0;
     unsigned char r, g, b;
     r = 255; g = 0; b = 0;
-    for(int y=0; y<sizeY; y++) {
+    /*for(int y=0; y<sizeY; y++) {
         if (y>sizeY/4)
             g = 127;
         if (y>sizeY/2)
@@ -49,7 +49,7 @@ void process()
             image.pixels[pos].b = b;
             pos++;
         }
-    }
+    }*/
 
     pos = 0;
     r = 0;
@@ -134,6 +134,38 @@ void process()
     buildTex();
 }
 
+void medianCut(){
+    /*
+
+    typedef struct {
+   RGB8* cor;
+    int freq;
+} CorFreq;
+
+
+CorFreq cores[] = {CorFreq,CorFreq,CorFreq}
+cores[i].cor.r
+*/
+    //Copia pixels
+    int totalPixels = sizeof(RGB8) * image.width * image.height;
+    RGB8 colors[totalPixels];
+    int r,g,b = 0;
+    for(int i=0; i<totalPixels; i++){
+        imgOrigR = image.pixels[i].r;
+        imgOrigG = image.pixels[i].g;
+        imgOrigB = image.pixels[i].b;
+        RGB8 rgb8 = {imgOrigR, imgOrigG, imgOrigB};
+        colors[i] = rgb8;
+        r = (r < imgOrigR) ? imgOrigR : r;
+        g = (r < imgOrigG) ? imgOrigG : g;
+        b = (r < imgOrigB) ? imgOrigB : b;
+    }
+    printf("\n %d", sizeof(colors));
+
+    //Define indice de maior alcance
+
+}
+
 int main(int argc, char** argv)
 {
     if(argc==1) {
@@ -161,12 +193,10 @@ int main(int argc, char** argv)
 
     //linha 1 cores
     fscanf(fp, "%s", fileFormat);
-    //linha 2 width
-    fscanf(fp, "%d", &sizeX);
-    //linha 2 height
-    fscanf(fp, "%d", &sizeY);
+    //linha 2 width height
+    fscanf(fp, "%d %d", &sizeX, &sizeY);
     //linha 3 valor maximo de cada cor
-    fscanf(fp, "%d", &valorMaxCor);
+    fscanf(fp, "%d\n", &valorMaxCor);
 
     //Atribui valores a image24 e aloca memoria para armazenar os pixels
     image.width  = sizeX;
@@ -186,23 +216,25 @@ int main(int argc, char** argv)
 
     modo = IMG24;
 
-    // Aplica processamento inicial
-    process();
+    //medianCut();
 
-    return 0;
+    // Aplica processamento inicial
+   // process();
+
+    //return 0;
     /**********************************************/
 
     // TESTE: cria uma imagem de 800x600
-    sizeX = 800;
-    sizeY = 600;
+    //sizeX = 800;
+    //sizeY = 600;
 
     printf("%d x %d\n", sizeX, sizeY);
 
     // Aloca memória para imagem de 24 bits
-    image.width  = sizeX;
+    /*image.width  = sizeX;
     image.height = sizeY;
     image.pixels = (RGB8*) malloc(sizeof(RGB8) * sizeX * sizeY);
-
+    */
     // Aloca memória para imagem de 8 bits
     image8.width  = sizeX;
     image8.height = sizeY;
