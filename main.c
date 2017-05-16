@@ -1,5 +1,7 @@
 #include <math.h>
 #include <string.h>		// para usar strings
+#include <limits.h>
+#include <float.h>
 
 // Rotinas para acesso da OpenGL
 #include "opengl.h"
@@ -51,9 +53,11 @@ void process()
         }
     }*/
 
+    buildImage8();
+
     pos = 0;
     r = 0;
-    for(int y=0; y<sizeY; y++) {
+    /*for(int y=0; y<sizeY; y++) {
         if (y>sizeY/4)
             r = 1;
         if (y>sizeY/2)
@@ -79,7 +83,7 @@ void process()
     image8.pal[2].b = 0;
     image8.pal[3].r = 255;
     image8.pal[3].g = 0;
-    image8.pal[3].b = 0;
+    image8.pal[3].b = 0;*/
 
     // Exemplo: imagem RLE
 
@@ -134,35 +138,96 @@ void process()
     buildTex();
 }
 
-void medianCut(){
-    /*
+void buildImage8(){
+    //Verifica a frequencia de uso de cada cor da imagem
+    int totalPixels = sizeX * sizeY;//sizeof(RGB8) * sizeX * sizeY;
+    /*int cores;
+    cores = malloc ((sizeof(int) * totalPixels) * 4);
+    cores[totalPixels][4];*/
 
     typedef struct {
-   RGB8* cor;
-    int freq;
-} CorFreq;
+        int r,g,b;
+        int frequencia;
+    } CorFreq;
 
+    CorFreq *cores;
+    cores = malloc (sizeof(CorFreq) * totalPixels);
 
-CorFreq cores[] = {CorFreq,CorFreq,CorFreq}
-cores[i].cor.r
-*/
-    //Copia pixels
-    int totalPixels = sizeof(RGB8) * image.width * image.height;
-    RGB8 colors[totalPixels];
-    int r,g,b = 0;
-    for(int i=0; i<totalPixels; i++){
-        imgOrigR = image.pixels[i].r;
-        imgOrigG = image.pixels[i].g;
-        imgOrigB = image.pixels[i].b;
-        RGB8 rgb8 = {imgOrigR, imgOrigG, imgOrigB};
-        colors[i] = rgb8;
-        r = (r < imgOrigR) ? imgOrigR : r;
-        g = (r < imgOrigG) ? imgOrigG : g;
-        b = (r < imgOrigB) ? imgOrigB : b;
+    int exists;
+    int coresPos = 0;
+    for(int i=0; i < totalPixels; i++){
+        exists = 0;
+        //int coresSize = sizeof(cores)/sizeof(CorFreq);
+        for(int j=0; j <= coresPos; j++){
+            if(cores[j].r == image.pixels[i].r && cores[j].g == image.pixels[i].g && cores[j].b == image.pixels[i].b){
+                cores[j].frequencia++;
+                exists = 1;
+                break;
+            }
+        }
+
+        if(exists == 0){
+            cores[coresPos].r = image.pixels[i].r;
+            cores[coresPos].g = image.pixels[i].g;
+            cores[coresPos].b = image.pixels[i].b;
+            cores[coresPos].frequencia = 1;
+            coresPos++;
+        }
     }
-    printf("\n %d", sizeof(colors));
 
-    //Define indice de maior alcance
+
+    //ordena as cores por frequencia
+    //int n = sizeof(cores) / sizeof(cores[0]);
+    int k = coresPos - 1;
+    for(int i = 0; i < coresPos; i++){
+        for(int j = 0; j < k; j++){
+            if(cores[j].frequencia < cores[j+1].frequencia){
+                CorFreq aux = cores[j];
+                cores[j] = cores[j+1];
+                cores[j+1] = aux;
+            }
+         }
+         k--;
+    }
+
+    //Insere as 16 cores mais usadas na paleta da imagem8
+    for(int i=0; i<16; i++){
+        image8.pal[i].r = cores[i].r;
+        image8.pal[i].g = cores[i].g;
+        image8.pal[i].b = cores[i].b;
+        //printf("\n pal[%d] : %d %d %d %d", i, cores[i].r, cores[i].g, cores[i].b, cores[i].frequencia);
+        //printf("\n");
+    }
+
+    free(cores);
+
+    /*for(int i=0; i<=16; i++){
+        printf("\n %d %d %d", image8.pal[i].r, image8.pal[i].g, image8.pal[i].b);
+    }*/
+
+    //Preenche a image8 com as cores mais proximas da image original
+    double distancia = 15284715;
+    int palPos = 0;
+    double ed = 0;
+    for(int i=0; i < totalPixels; i++){
+        for(int j=0; j < 16; j++){
+            ed = (double)sqrt(
+                         pow(image.pixels[i].r-image8.pal[j].r,2)+
+                         pow(image.pixels[i].g-image8.pal[j].g,2)+
+                         pow(image.pixels[i].b-image8.pal[j].b,2));
+
+            if(ed > distancia){
+                distancia = ed;
+                palPos = j;
+                printf("\n pp: %d -- %d", palPos, ed);
+            }
+        }
+
+        image8.pixels[i] = distancia;
+        image.pixels[i].r = image8.pal[palPos].r;
+        image.pixels[i].g = image8.pal[palPos].g;
+        image.pixels[i].b = image8.pal[palPos].b;
+    }
 
 }
 
@@ -202,7 +267,7 @@ int main(int argc, char** argv)
     image.width  = sizeX;
     image.height = sizeY;
     image.pixels = (RGB8*) malloc(sizeof(RGB8) * sizeX * sizeY);
-    printf("%d x %d - %d", image.width,image.height,sizeof(image.pixels));
+    //printf("%d x %d - %d", image.width,image.height,sizeof(image.pixels));
 
     //Le imagem para a memoria
     int totalPixels = sizeof(RGB8) * sizeX * sizeY;
@@ -228,7 +293,7 @@ int main(int argc, char** argv)
     //sizeX = 800;
     //sizeY = 600;
 
-    printf("%d x %d\n", sizeX, sizeY);
+    //printf("%d x %d\n", sizeX, sizeY);
 
     // Aloca memória para imagem de 24 bits
     /*image.width  = sizeX;
