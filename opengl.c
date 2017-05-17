@@ -105,6 +105,7 @@ void buildTex()
             pixels[pos].r = color.r;
             pixels[pos].g = color.g;
             pixels[pos].b = color.b;
+            //printf("\n Pixels %d %d %d \n", color.r,color.g,color.b);
         }
     }
     else { // RLE

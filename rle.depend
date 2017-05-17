@@ -29,9 +29,11 @@
 1491603111 source:/home/10049190/git/progswb2/trab/t1-171-fy236sgydfgr3/t1-rle/opengl.c
 	"opengl.h"
 
-1494970355 source:/home/15109336/DriveH/c/imageCompressor/main.c
+1495059130 source:/home/15109336/DriveH/c/imageCompressor/main.c
 	<math.h>
 	<string.h>
+	<limits.h>
+	<float.h>
 	"opengl.h"
 
 1494968859 /home/15109336/DriveH/c/imageCompressor/opengl.h
@@ -70,7 +72,7 @@
 
 1491910956 /home/15109336/DriveH/c/imageCompressor/include/GL/freeglut_ext.h
 
-1494962734 source:/home/15109336/DriveH/c/imageCompressor/opengl.c
+1495057617 source:/home/15109336/DriveH/c/imageCompressor/opengl.c
 	"opengl.h"
 	<string.h>
 

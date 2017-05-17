@@ -91,11 +91,54 @@ void process()
     memcpy(imageRLE.pal, image8.pal, 256 * 3);
 
     // Aloca mem. para a imagem RLE (e' muito mais do que precisa, mas assim simplifica)
+    //imageRLE.data = (unsigned char*) malloc(sizeX * sizeY);
     imageRLE.data = (unsigned char*) malloc(sizeX * sizeY);
+
+    /*IMAGE RLE*/
+    int image8PixelsSize = image.height*image.width;
+    unsigned char auxdata[4802];
+    int c = 0;
+    int indice = 0;
+    pos = 0;
+    for(int i=0; i<image8PixelsSize; i++){
+        /*RGB8 color = image8.pal[image8.pixels[i]];
+        printf("\n px: %d %d %d", color.r,color.g,color.b);
+        c++;
+        if(c == 6){
+            break;
+        }*/
+        c = 0;
+        indice = image8.pixels[i];
+        for(int j=i+1; j < image8PixelsSize; j++){
+            if(image8.pixels[i] == indice){
+                c++;
+            }else{
+                break;
+            }
+        }
+        auxdata[pos] = indice;
+        auxdata[pos+1] = c;
+        pos += 2;
+    }
+    auxdata[pos] = 0;
+    auxdata[pos+1] = 0;
+
+    //printf("\n data: %d \n", auxdata[0]);
+    /*for(int i=0; i < pos; i++){
+        printf("\n data: %d", auxdata[i]);
+    }*/
+    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+    /*
+    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+    free(auxdata);
+    for(int i=0; i < pos; i++){
+        //printf("\n data: %d", imageRLE.data[i]);
+    }*/
+    /**/
 
     // Gera 600 linhas na imagem RLE (a cada 50, troca a cor)
     // Cada linha cheia ocupa 8 bytes + 2 no final para marcar o fim da imagem
-    unsigned char auxdata[4802];
+    /*unsigned char auxdata[4802];
     pos = 0;
     int y = 0;
     int index = 0;
@@ -116,21 +159,22 @@ void process()
            index = (index +1) % 4;
         }
     }
+
     // Marca o fim com dois zeros
     auxdata[pos] = 0;
     auxdata[pos+1] = 0;
 
     // Visualizando os primeiros 128 bytes...
     printf("Pos: %d\n", pos);
-    for(pos=0; pos<128; pos++) {
+    /*for(pos=0; pos<128; pos++) {
         if(pos%16==0)
             printf("\n%04x: ",pos);
         printf("%02X ", auxdata[pos]);
-    }
-    printf("\n");
+    }*/
+    //printf("\n");
 
     // Copia para o buffer da imagem
-    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
 
     //
     // NÃO ALTERAR A PARTIR DAQUI!!!!
@@ -216,17 +260,17 @@ void buildImage8(){
                          pow(image.pixels[i].g-image8.pal[j].g,2)+
                          pow(image.pixels[i].b-image8.pal[j].b,2));
 
-            if(ed > distancia){
+            if(ed < distancia){
                 distancia = ed;
                 palPos = j;
-                printf("\n pp: %d -- %d", palPos, ed);
+                //printf("\n pp: %d -- %d", palPos, ed);
             }
         }
 
-        image8.pixels[i] = distancia;
-        image.pixels[i].r = image8.pal[palPos].r;
-        image.pixels[i].g = image8.pal[palPos].g;
-        image.pixels[i].b = image8.pal[palPos].b;
+        image8.pixels[i] = palPos;
+        //image.pixels[i].r = image8.pal[palPos].r;
+        //image.pixels[i].g = image8.pal[palPos].g;
+        //image.pixels[i].b = image8.pal[palPos].b;
     }
 
 }
@@ -279,7 +323,7 @@ int main(int argc, char** argv)
 
     fclose(fp);
 
-    modo = IMG24;
+    //modo = IMG24;
 
     //medianCut();
 
@@ -305,7 +349,7 @@ int main(int argc, char** argv)
     image8.height = sizeY;
     image8.pixels = (unsigned char*) malloc(sizeX * sizeY);
 
-    modo = IMG24;
+    //modo = IMG24;
 
     // Aplica processamento inicial
     process();
