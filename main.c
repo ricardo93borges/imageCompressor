@@ -91,48 +91,53 @@ void process()
     memcpy(imageRLE.pal, image8.pal, 256 * 3);
 
     // Aloca mem. para a imagem RLE (e' muito mais do que precisa, mas assim simplifica)
-    //imageRLE.data = (unsigned char*) malloc(sizeX * sizeY);
     imageRLE.data = (unsigned char*) malloc(sizeX * sizeY);
 
     /*IMAGE RLE*/
-    int image8PixelsSize = image.height*image.width;
-    unsigned char auxdata[4802];
-    int c = 0;
+    int image8PixelsSize = sizeX*sizeY;
+    unsigned char *auxdata;//[image8PixelsSize];
+    //auxdata = (unsigned char*) malloc(sizeX * sizeY);
+
+    unsigned char* c;
     int indice = 0;
+    int i = 0;
     pos = 0;
-    for(int i=0; i<image8PixelsSize; i++){
+    while(i < image8PixelsSize){
+    //for(int i=0; i<100; i++){
         /*RGB8 color = image8.pal[image8.pixels[i]];
         printf("\n px: %d %d %d", color.r,color.g,color.b);
         c++;
         if(c == 6){
             break;
         }*/
-        c = 0;
+        c = 1;
         indice = image8.pixels[i];
+        imageRLE.data[pos] = indice;
+        //printf("\n indice: %d", indice);
         for(int j=i+1; j < image8PixelsSize; j++){
-            if(image8.pixels[i] == indice){
+            if(image8.pixels[j] == indice){
                 c++;
+                imageRLE.data[pos+1]++;
             }else{
                 break;
             }
         }
-        auxdata[pos] = indice;
-        auxdata[pos+1] = c;
-        pos += 2;
-    }
-    auxdata[pos] = 0;
-    auxdata[pos+1] = 0;
 
-    //printf("\n data: %d \n", auxdata[0]);
-    /*for(int i=0; i < pos; i++){
-        printf("\n data: %d", auxdata[i]);
-    }*/
-    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
-    /*
-    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
-    free(auxdata);
-    for(int i=0; i < pos; i++){
-        //printf("\n data: %d", imageRLE.data[i]);
+        //printf("\n Indice: %d, c: %d ", indice, c);
+        printf("\n data[pos]: %d, c: %d ", imageRLE.data[pos+1], c);
+        pos += 2;
+        i += c;
+        printf("\n i %d:",i);
+    }
+    imageRLE.data[pos] = 0;
+    imageRLE.data[pos+1] = 0;
+
+
+    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+    //free(auxdata);
+    /*for(int i=0; i < 100; i++){
+        printf("\n %d-data: %d %d", i, imageRLE.data[i], imageRLE.data[i+1]);
+        i += 1;
     }*/
     /**/
 
@@ -235,7 +240,7 @@ void buildImage8(){
     }
 
     //Insere as 16 cores mais usadas na paleta da imagem8
-    for(int i=0; i<16; i++){
+    for(int i=0; i<255; i++){
         image8.pal[i].r = cores[i].r;
         image8.pal[i].g = cores[i].g;
         image8.pal[i].b = cores[i].b;
@@ -250,11 +255,13 @@ void buildImage8(){
     }*/
 
     //Preenche a image8 com as cores mais proximas da image original
-    double distancia = 15284715;
+    double distancia = 99999999;
     int palPos = 0;
     double ed = 0;
     for(int i=0; i < totalPixels; i++){
-        for(int j=0; j < 16; j++){
+        //printf("\n %d %d %d ", image.pixels[i].r, image.pixels[i].g, image.pixels[i].b);
+        //printf("\n --- \n");
+        for(int j=0; j < 15; j++){
             ed = (double)sqrt(
                          pow(image.pixels[i].r-image8.pal[j].r,2)+
                          pow(image.pixels[i].g-image8.pal[j].g,2)+
@@ -263,7 +270,9 @@ void buildImage8(){
             if(ed < distancia){
                 distancia = ed;
                 palPos = j;
-                //printf("\n pp: %d -- %d", palPos, ed);
+                printf("\n %d %d %d ed%f", image8.pal[j].r, image8.pal[j].g, image8.pal[j].b, ed);
+                //printf("\n palPos: %d", palPos);
+                //printf("\n Distancia: %f ", distancia);
             }
         }
 
