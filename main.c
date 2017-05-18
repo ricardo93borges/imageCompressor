@@ -102,6 +102,7 @@ void process()
     int indice = 0;
     int i = 0;
     pos = 0;
+    int j=0;
     while(i < image8PixelsSize){
     //for(int i=0; i<100; i++){
         /*RGB8 color = image8.pal[image8.pixels[i]];
@@ -113,8 +114,10 @@ void process()
         c = 1;
         indice = image8.pixels[i];
         imageRLE.data[pos] = indice;
+        imageRLE.data[pos+1] = 1;
         //printf("\n indice: %d", indice);
-        for(int j=i+1; j < image8PixelsSize; j++){
+
+        for(j=i+1; j < image8PixelsSize; j++){
             if(image8.pixels[j] == indice){
                 c++;
                 imageRLE.data[pos+1]++;
@@ -124,10 +127,10 @@ void process()
         }
 
         //printf("\n Indice: %d, c: %d ", indice, c);
-        printf("\n data[pos]: %d, c: %d ", imageRLE.data[pos+1], c);
+        //printf("\n data[pos]: %d, c: %d ", imageRLE.data[pos+1], c);
         pos += 2;
         i += c;
-        printf("\n i %d:",i);
+        //printf("\n i %d:",i);
     }
     imageRLE.data[pos] = 0;
     imageRLE.data[pos+1] = 0;
@@ -240,7 +243,7 @@ void buildImage8(){
     }
 
     //Insere as 16 cores mais usadas na paleta da imagem8
-    for(int i=0; i<255; i++){
+    for(int i=0; i<15; i++){
         image8.pal[i].r = cores[i].r;
         image8.pal[i].g = cores[i].g;
         image8.pal[i].b = cores[i].b;
@@ -271,7 +274,7 @@ void buildImage8(){
             if(ed < distancia){
                 distancia = ed;
                 palPos = j;
-                printf("\n %d %d %d ed%f", image8.pal[j].r, image8.pal[j].g, image8.pal[j].b, ed);
+               // printf("\n %d %d %d ed%f", image8.pal[j].r, image8.pal[j].g, image8.pal[j].b, ed);
                 //printf("\n palPos: %d", palPos);
                 //printf("\n Distancia: %f ", distancia);
             }
