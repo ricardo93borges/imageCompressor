@@ -259,6 +259,7 @@ void buildImage8(){
     int palPos = 0;
     double ed = 0;
     for(int i=0; i < totalPixels; i++){
+            distancia=999999;
         //printf("\n %d %d %d ", image.pixels[i].r, image.pixels[i].g, image.pixels[i].b);
         //printf("\n --- \n");
         for(int j=0; j < 15; j++){
