@@ -37,7 +37,7 @@ void process()
     unsigned char r, g, b;
     r = 255; g = 0; b = 0;
 
-    buildImage8();
+    buildImage8();//CONSTROI IMAGEM 8BITS
 
     pos = 0;
     r = 0;
@@ -51,24 +51,23 @@ void process()
     int image8PixelsSize = sizeX*sizeY;
     unsigned char auxdata[image8PixelsSize];
 
-    int c;
-    int soma=0;
+    int c; // QUANTIDADE DE CORES QUE JÁ PASSARAM
+    int k = 0; // SOMA DAS POSIÇÕES QUE JÁ PASSARAM
     int i = 0;
     pos = 0;
-    int j=0;
+    int j = 0;
     while(i < image8PixelsSize){
         c = 0;
         auxdata[pos] = image8.pixels[i];
         auxdata[pos+1] = 0;
-        //printf("\n indice: %d", indice);
-           while(auxdata[pos] == image8.pixels[i]){
-                c++;
-                i+=2;
-           }
-        soma+=c;
+        while(auxdata[pos] == image8.pixels[i]){
+            c++;
+            i+=2;
+        }
+        k+=c;
         auxdata[pos+1] = c;
         pos += 2;
-        i =soma;
+        i = k;
     }
 
     // Copia para o buffer da imagem
@@ -76,13 +75,17 @@ void process()
 
     imageRLE.data[pos] = 0;
     imageRLE.data[pos+1] = 0;
-
     //
     // NÃO ALTERAR A PARTIR DAQUI!!!!
     //
     buildTex();
 }
+/*
+    Constroi image8
 
+    -Escolhe as cores mais frequentes
+    -Aplica a formula distancia euclidiana
+*/
 void buildImage8(){
     //Verifica a frequencia de uso de cada cor da imagem
     int totalPixels = sizeX * sizeY;//sizeof(RGB8) * sizeX * sizeY;
@@ -99,7 +102,6 @@ void buildImage8(){
     int coresPos = 0;
     for(int i=0; i < totalPixels; i++){
         exists = 0;
-        //int coresSize = sizeof(cores)/sizeof(CorFreq);
         for(int j=0; j <= coresPos; j++){
             if(cores[j].r == image.pixels[i].r && cores[j].g == image.pixels[i].g && cores[j].b == image.pixels[i].b){
                 cores[j].frequencia++;
@@ -118,7 +120,6 @@ void buildImage8(){
     }
 
     //ordena as cores por frequencia
-    //int n = sizeof(cores) / sizeof(cores[0]);
     int k = coresPos - 1;
     for(int i = 0; i < coresPos; i++){
         for(int j = 0; j < k; j++){
@@ -138,12 +139,14 @@ void buildImage8(){
         image8.pal[i].b = cores[i].b;
     }
 
+    //alocar memória
     free(cores);
 
     //Preenche a image8 com as cores mais proximas da image original
     double distancia = 99999999;
     int palPos = 0;
     double ed = 0;
+    //euclides esta aqui
     for(int i=0; i < totalPixels; i++){
         distancia=999999;
         for(int j=0; j < 15; j++){
@@ -188,7 +191,6 @@ int main(int argc, char** argv)
     image.width  = sizeX;
     image.height = sizeY;
     image.pixels = (RGB8*) malloc(sizeof(RGB8) * sizeX * sizeY);
-    //printf("%d x %d - %d", image.width,image.height,sizeof(image.pixels));
 
     //Le imagem para a memoria
     int totalPixels = sizeof(RGB8) * sizeX * sizeY;
@@ -202,10 +204,8 @@ int main(int argc, char** argv)
     image8.width  = sizeX;
     image8.height = sizeY;
     image8.pixels = (unsigned char*) malloc(sizeX * sizeY);
-
     // Aplica processamento inicial
     process();
-
     // Não retorna... a partir daqui, interação via teclado e mouse apenas, na janela gráfica
     glutMainLoop();
     return 0;
