@@ -95,7 +95,7 @@ void process()
 
     /*IMAGE RLE*/
     int image8PixelsSize = sizeX*sizeY;
-    unsigned char *auxdata;//[image8PixelsSize];
+    //unsigned char *auxdata;//[image8PixelsSize];
     //auxdata = (unsigned char*) malloc(sizeX * sizeY);
 
     unsigned char* c;
@@ -103,14 +103,9 @@ void process()
     int i = 0;
     pos = 0;
     int j=0;
+    printf("\n t: %d", image8PixelsSize);
     while(i < image8PixelsSize){
     //for(int i=0; i<100; i++){
-        /*RGB8 color = image8.pal[image8.pixels[i]];
-        printf("\n px: %d %d %d", color.r,color.g,color.b);
-        c++;
-        if(c == 6){
-            break;
-        }*/
         c = 1;
         indice = image8.pixels[i];
         imageRLE.data[pos] = indice;
@@ -132,6 +127,36 @@ void process()
         i += c;
         //printf("\n i %d:",i);
     }
+
+    /*for(int i=0; i < image8PixelsSize/2; i++){
+        printf("\n [%d] %d %d",i,imageRLE.data[i],imageRLE.data[++i]);
+    }*/
+
+    /*pos = 0; //aux para guardar a posicao atual de auxdata;
+    int y = 0; //laço do while;
+    int repete=0; //aux para guardar quantas vezes a cor repete
+    unsigned char auxdata[image8PixelsSize];
+    while(y < image8PixelsSize) {
+
+        auxdata[pos]=image8.pixels[y]; //guarda a cor na posicao POS;
+        repete=0;
+
+        while(image8.pixels[y]==auxdata[pos]){
+            repete++; //guarda quantas vezes a cor se repete;
+            y++;
+        }
+        auxdata[pos+1]=repete;
+        pos+=2;
+
+    }
+    printf("\n y: %d %d \n",y, y%2);*/
+    /*for(int i=0; i<128*5; i++){
+        printf("\n [%d] %d - %d", i, auxdata[i], auxdata[i+1]);
+        i+=1;
+    }*/
+
+    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+
     imageRLE.data[pos] = 0;
     imageRLE.data[pos+1] = 0;
 
