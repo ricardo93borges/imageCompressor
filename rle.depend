@@ -76,3 +76,50 @@
 	"opengl.h"
 	<string.h>
 
+1495226189 source:/home/14104960/DriveH/imageCompressor/main.c
+	<math.h>
+	<string.h>
+	<limits.h>
+	<float.h>
+	"opengl.h"
+
+1495226189 /home/14104960/DriveH/imageCompressor/opengl.h
+	<windows.h>
+	"gl/glut.h"
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/gl/glut.h
+	"freeglut.h"
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/gl/freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/gl/freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/gl/freeglut_ext.h
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/GL/glut.h
+	"freeglut.h"
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/GL/freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/GL/freeglut_std.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1495226188 /home/14104960/DriveH/imageCompressor/include/GL/freeglut_ext.h
+
+1495226189 source:/home/14104960/DriveH/imageCompressor/opengl.c
+	"opengl.h"
+	<string.h>
+

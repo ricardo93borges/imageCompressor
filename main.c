@@ -36,57 +36,11 @@ void process()
     int pos = 0;
     unsigned char r, g, b;
     r = 255; g = 0; b = 0;
-    /*for(int y=0; y<sizeY; y++) {
-        if (y>sizeY/4)
-            g = 127;
-        if (y>sizeY/2)
-            b = 127;
-        if (y>sizeY-sizeY/4)
-        {
-            r = 0;
-        }
-        for(int x=0; x<sizeX; x++) {
-            image.pixels[pos].r = r;
-            image.pixels[pos].g = g;
-            image.pixels[pos].b = b;
-            pos++;
-        }
-    }*/
 
     buildImage8();
 
     pos = 0;
     r = 0;
-    /*for(int y=0; y<sizeY; y++) {
-        if (y>sizeY/4)
-            r = 1;
-        if (y>sizeY/2)
-            r = 2;
-        if (y>sizeY-sizeY/4)
-        {
-            r = 3;
-        }
-        for(int x=0; x<sizeX; x++) {
-            image8.pixels[pos] = r;
-            pos++;
-        }
-    }
-    // Exemplo: imagem de 8 bits (com outras cores, para testar)
-    image8.pal[0].r = 80;
-    image8.pal[0].g = 0;
-    image8.pal[0].b = 0;
-    image8.pal[1].r = 127;
-    image8.pal[1].g = 0;
-    image8.pal[1].b = 0;
-    image8.pal[2].r = 192;
-    image8.pal[2].g = 0;
-    image8.pal[2].b = 0;
-    image8.pal[3].r = 255;
-    image8.pal[3].g = 0;
-    image8.pal[3].b = 0;*/
-
-    // Exemplo: imagem RLE
-
     // Copia a palheta da imagem de 8 bits
     memcpy(imageRLE.pal, image8.pal, 256 * 3);
 
@@ -95,119 +49,33 @@ void process()
 
     /*IMAGE RLE*/
     int image8PixelsSize = sizeX*sizeY;
-    //unsigned char *auxdata;//[image8PixelsSize];
-    //auxdata = (unsigned char*) malloc(sizeX * sizeY);
+    unsigned char auxdata[image8PixelsSize];
 
-    unsigned char* c;
-    int indice = 0;
+    int c;
+    int soma=0;
     int i = 0;
     pos = 0;
     int j=0;
-    printf("\n t: %d", image8PixelsSize);
     while(i < image8PixelsSize){
-    //for(int i=0; i<100; i++){
-        c = 1;
-        indice = image8.pixels[i];
-        imageRLE.data[pos] = indice;
-        imageRLE.data[pos+1] = 1;
+        c = 0;
+        auxdata[pos] = image8.pixels[i];
+        auxdata[pos+1] = 0;
         //printf("\n indice: %d", indice);
-
-        for(j=i+1; j < image8PixelsSize; j++){
-            if(image8.pixels[j] == indice){
+           while(auxdata[pos] == image8.pixels[i]){
                 c++;
-                imageRLE.data[pos+1]++;
-            }else{
-                break;
-            }
-        }
-
-        //printf("\n Indice: %d, c: %d ", indice, c);
-        //printf("\n data[pos]: %d, c: %d ", imageRLE.data[pos+1], c);
+                i+=2;
+           }
+        soma+=c;
+        auxdata[pos+1] = c;
         pos += 2;
-        i += c;
-        //printf("\n i %d:",i);
+        i =soma;
     }
 
-    /*for(int i=0; i < image8PixelsSize/2; i++){
-        printf("\n [%d] %d %d",i,imageRLE.data[i],imageRLE.data[++i]);
-    }*/
-
-    /*pos = 0; //aux para guardar a posicao atual de auxdata;
-    int y = 0; //laço do while;
-    int repete=0; //aux para guardar quantas vezes a cor repete
-    unsigned char auxdata[image8PixelsSize];
-    while(y < image8PixelsSize) {
-
-        auxdata[pos]=image8.pixels[y]; //guarda a cor na posicao POS;
-        repete=0;
-
-        while(image8.pixels[y]==auxdata[pos]){
-            repete++; //guarda quantas vezes a cor se repete;
-            y++;
-        }
-        auxdata[pos+1]=repete;
-        pos+=2;
-
-    }
-    printf("\n y: %d %d \n",y, y%2);*/
-    /*for(int i=0; i<128*5; i++){
-        printf("\n [%d] %d - %d", i, auxdata[i], auxdata[i+1]);
-        i+=1;
-    }*/
-
-    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
+    // Copia para o buffer da imagem
+    memcpy(imageRLE.data, auxdata, sizeof(auxdata));
 
     imageRLE.data[pos] = 0;
     imageRLE.data[pos+1] = 0;
-
-
-    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
-    //free(auxdata);
-    /*for(int i=0; i < 100; i++){
-        printf("\n %d-data: %d %d", i, imageRLE.data[i], imageRLE.data[i+1]);
-        i += 1;
-    }*/
-    /**/
-
-    // Gera 600 linhas na imagem RLE (a cada 50, troca a cor)
-    // Cada linha cheia ocupa 8 bytes + 2 no final para marcar o fim da imagem
-    /*unsigned char auxdata[4802];
-    pos = 0;
-    int y = 0;
-    int index = 0;
-    while(y < 600) {
-        // Faz uma linha na imagem (255+255+255+35 => 800)
-        auxdata[pos]   = index;
-        auxdata[pos+1] = 255;
-        auxdata[pos+2] = index;
-        auxdata[pos+3] = 255;
-        auxdata[pos+4] = index;
-        auxdata[pos+5] = 255;
-        auxdata[pos+6] = index;
-        auxdata[pos+7] = 35;
-        pos+=8;
-        y++;
-        if(y%50 == 0) {
-           // Aumenta o índice da cor, volta para 0 quando passar de 3
-           index = (index +1) % 4;
-        }
-    }
-
-    // Marca o fim com dois zeros
-    auxdata[pos] = 0;
-    auxdata[pos+1] = 0;
-
-    // Visualizando os primeiros 128 bytes...
-    printf("Pos: %d\n", pos);
-    /*for(pos=0; pos<128; pos++) {
-        if(pos%16==0)
-            printf("\n%04x: ",pos);
-        printf("%02X ", auxdata[pos]);
-    }*/
-    //printf("\n");
-
-    // Copia para o buffer da imagem
-    //memcpy(imageRLE.data, auxdata, sizeof(auxdata));
 
     //
     // NÃO ALTERAR A PARTIR DAQUI!!!!
@@ -218,9 +86,6 @@ void process()
 void buildImage8(){
     //Verifica a frequencia de uso de cada cor da imagem
     int totalPixels = sizeX * sizeY;//sizeof(RGB8) * sizeX * sizeY;
-    /*int cores;
-    cores = malloc ((sizeof(int) * totalPixels) * 4);
-    cores[totalPixels][4];*/
 
     typedef struct {
         int r,g,b;
@@ -252,7 +117,6 @@ void buildImage8(){
         }
     }
 
-
     //ordena as cores por frequencia
     //int n = sizeof(cores) / sizeof(cores[0]);
     int k = coresPos - 1;
@@ -272,24 +136,16 @@ void buildImage8(){
         image8.pal[i].r = cores[i].r;
         image8.pal[i].g = cores[i].g;
         image8.pal[i].b = cores[i].b;
-        //printf("\n pal[%d] : %d %d %d %d", i, cores[i].r, cores[i].g, cores[i].b, cores[i].frequencia);
-        //printf("\n");
     }
 
     free(cores);
-
-    /*for(int i=0; i<=16; i++){
-        printf("\n %d %d %d", image8.pal[i].r, image8.pal[i].g, image8.pal[i].b);
-    }*/
 
     //Preenche a image8 com as cores mais proximas da image original
     double distancia = 99999999;
     int palPos = 0;
     double ed = 0;
     for(int i=0; i < totalPixels; i++){
-            distancia=999999;
-        //printf("\n %d %d %d ", image.pixels[i].r, image.pixels[i].g, image.pixels[i].b);
-        //printf("\n --- \n");
+        distancia=999999;
         for(int j=0; j < 15; j++){
             ed = (double)sqrt(
                          pow(image.pixels[i].r-image8.pal[j].r,2)+
@@ -299,18 +155,10 @@ void buildImage8(){
             if(ed < distancia){
                 distancia = ed;
                 palPos = j;
-               // printf("\n %d %d %d ed%f", image8.pal[j].r, image8.pal[j].g, image8.pal[j].b, ed);
-                //printf("\n palPos: %d", palPos);
-                //printf("\n Distancia: %f ", distancia);
             }
         }
-
         image8.pixels[i] = palPos;
-        //image.pixels[i].r = image8.pal[palPos].r;
-        //image.pixels[i].g = image8.pal[palPos].g;
-        //image.pixels[i].b = image8.pal[palPos].b;
     }
-
 }
 
 int main(int argc, char** argv)
@@ -322,15 +170,6 @@ int main(int argc, char** argv)
 
     // Inicialização da janela gráfica
     init(argc,argv);
-
-    //
-    // INCLUA aqui o código para LER a imagem de entrada
-    //
-    // Siga as orientações no enunciado para:
-    //
-    // 1. Descobrir o tamanho da imagem (ler header)
-    // 2. Ler os pixels
-    //
 
     char fileFormat[2];
     FILE *fp;
@@ -355,39 +194,14 @@ int main(int argc, char** argv)
     int totalPixels = sizeof(RGB8) * sizeX * sizeY;
     fread(image.pixels, totalPixels, 1, fp);
 
-    /*for(int i=0; i < totalPixels; i++){
-        printf("\n%d %d %d", image.pixels[i].r, image.pixels[i].g, image.pixels[i].b);
-    }*/
-
     fclose(fp);
 
-    //modo = IMG24;
+    modo = IMG24;
 
-    //medianCut();
-
-    // Aplica processamento inicial
-   // process();
-
-    //return 0;
-    /**********************************************/
-
-    // TESTE: cria uma imagem de 800x600
-    //sizeX = 800;
-    //sizeY = 600;
-
-    //printf("%d x %d\n", sizeX, sizeY);
-
-    // Aloca memória para imagem de 24 bits
-    /*image.width  = sizeX;
-    image.height = sizeY;
-    image.pixels = (RGB8*) malloc(sizeof(RGB8) * sizeX * sizeY);
-    */
     // Aloca memória para imagem de 8 bits
     image8.width  = sizeX;
     image8.height = sizeY;
     image8.pixels = (unsigned char*) malloc(sizeX * sizeY);
-
-    //modo = IMG24;
 
     // Aplica processamento inicial
     process();
